@@ -73,4 +73,27 @@
     </plugins>
   </build>
 
+  <profiles>
+
+    <!-- for use in local development build -->
+    <profile>
+      <id>local-dev</id>
+      <build>
+        <plugins>
+
+          <!-- Run UI tests -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
 </project>

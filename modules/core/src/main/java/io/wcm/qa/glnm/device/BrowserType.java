@@ -29,6 +29,18 @@ public enum BrowserType {
   FIREFOX("firefox"),
   /** Internet Explorer */
   IE("ie"),
+  /** Remote Chrome */
+  REMOTE_CHROME("remote_chrome"),
+  /** Remote firefox */
+  REMOTE_FIREFOX("remote_firefox"),
+  /** Remote IE */
+  REMOTE_IE("remote_ie"),
+  /** Remote Edge */
+  REMOTE_EDGE("remote_edge"),
+  /** Remote Safari */
+  REMOTE_SAFARI("remote_safari"),
+  /** Remote Opera */
+  REMOTE_OPERA("remote_opera"),
   /** No browser. */
   NO_BROWSER("NO_BROWSER");
 

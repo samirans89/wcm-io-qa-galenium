@@ -95,4 +95,5 @@ abstract class OptionsProvider<O extends MutableCapabilities> {
   }
 
   protected abstract O newOptions();
+
 }

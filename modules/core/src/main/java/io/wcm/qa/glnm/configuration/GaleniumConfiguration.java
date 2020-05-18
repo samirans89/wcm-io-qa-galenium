@@ -44,6 +44,7 @@ public final class GaleniumConfiguration {
   private static final String DEFAULT_BASE_URL = "http://localhost:4502";
   private static final String DEFAULT_BROWSER_LOG_LEVEL = "INFO";
   private static final String DEFAULT_DEVICE_CSV = "./target/test-classes/devices.csv";
+  private static final String DEFAULT_REMOTE_CAPABILITIES_PATH = "./target/test-classes/conf";
   private static final String DEFAULT_EXPECTED_TEXTS_FILE = "text/expectedTexts.properties";
   private static final int DEFAULT_GRID_PORT = 4444;
   private static final String DEFAULT_MEDIA_QUERY_PATH = "./target/test-classes/mediaqueries.properties";
@@ -60,6 +61,7 @@ public final class GaleniumConfiguration {
   private static final String SYSTEM_PROPERTY_NAME_CHROME_HEADLESS_ADDITIONAL_WIDTH = "galenium.webdriver.chrome.headless.additionalWidth";
   private static final String SYSTEM_PROPERTY_NAME_CHROME_HEADLESS_WINDOWS_WORKAROUND = "galenium.webdriver.chrome.headless.windowsWorkaround";
   private static final String SYSTEM_PROPERTY_NAME_DEVICE_CSV = "galenium.devices.csv";
+  private static final String SYSTEM_PROPERTY_NAME_REMOTE_CAPABILITIES_PATH = "selenium.capabilities.path";
   private static final String SYSTEM_PROPERTY_NAME_GALEN_JS_TEST_PATH = "galenium.jsTestPath";
   private static final String SYSTEM_PROPERTY_NAME_GALEN_SPEC_PATH = "galenium.specPath";
   private static final String SYSTEM_PROPERTY_NAME_GALEN_SUPPRESS_AUTO_ADJUST_BROWSERSIZE = "galenium.suppressAutoAdjustBrowserSize";
@@ -92,6 +94,9 @@ public final class GaleniumConfiguration {
   private static final String SYSTEM_PROPERTY_NAME_SELENIUM_BROWSER = "selenium.browser";
   private static final String SYSTEM_PROPERTY_NAME_SELENIUM_HOST = "selenium.host";
   private static final String SYSTEM_PROPERTY_NAME_SELENIUM_PORT = "selenium.port";
+  private static final String SYSTEM_PROPERTY_NAME_SELENIUM_USER = "selenium.user";
+  private static final String SYSTEM_PROPERTY_NAME_SELENIUM_ACCESS_KEY = "selenium.access_key";
+  private static final String SYSTEM_PROPERTY_NAME_SELENIUM_SESSION_CAPABILITIES = "selenium.capabilities";
   private static final String SYSTEM_PROPERTY_NAME_SELENIUM_RUNMODE = "selenium.runmode";
   private static final String SYSTEM_PROPERTY_NAME_SPARSE_REPORTING = "galenium.report.sparse";
   private static final String SYSTEM_PROPERTY_NAME_WEB_DRIVER_ALWAYS_NEW = "galenium.webdriver.alwaysNew";
@@ -360,6 +365,31 @@ public final class GaleniumConfiguration {
   }
 
   /**
+   * Path to remote capabilities folder.
+   * <ul>
+   * <li>Key:
+   *
+   * <pre>
+   * selenium.capabilities.path
+   * </pre>
+   *
+   * </li>
+   * <li>
+   * Default:
+   *
+   * <pre>
+   * ./target/test-classes/conf
+   * </pre>
+   *
+   * </li>
+   * </ul>
+   * @return path to {@link Properties} file containing media query definitions
+   */
+  public static String getRemoteCapabiltiesFolderPath() {
+    return asString(SYSTEM_PROPERTY_NAME_REMOTE_CAPABILITIES_PATH, DEFAULT_REMOTE_CAPABILITIES_PATH);
+  }
+
+  /**
    * Path to root folder of expected image samples to verify against.
    * <ul>
    * <li>Key:
@@ -483,6 +513,80 @@ public final class GaleniumConfiguration {
   public static int getGridPort() {
     return asInteger(SYSTEM_PROPERTY_NAME_SELENIUM_PORT, DEFAULT_GRID_PORT);
   }
+
+  /**
+   * Selenium Grid Authenticated User.
+   * <ul>
+   * <li>Key:
+   *
+   * <pre>
+   * selenium.user
+   * </pre>
+   *
+   * </li>
+   * <li>
+   * Default:
+   *
+   * <pre>
+   * null
+   * </pre>
+   *
+   * </li>
+   * </ul>
+   * @return Selenium Grid User
+   */
+
+  public static String getGridUser() {
+    return asString(SYSTEM_PROPERTY_NAME_SELENIUM_USER);
+  }
+
+  /**
+   * Selenium Grid Access Key.
+   * <ul>
+   * <li>Key:
+   *
+   * <pre>
+   * selenium.access_key
+   * </pre>
+   *
+   * </li>
+   * <li>
+   * Default:
+   *
+   * <pre>
+   * null
+   * </pre>
+   *
+   * </li>
+   * </ul>
+   * @return Selenium Grid Access Key
+   */
+  public static String getGridAccessKey() {
+    return asString(SYSTEM_PROPERTY_NAME_SELENIUM_ACCESS_KEY);
+  }
+
+  /**
+   * Selenium Session Capabilities.
+   * <ul>
+   * <li>Key:
+   *
+   * <pre>
+   * selenium.capabilities
+   * </pre>
+   *
+   * </li>
+   * <li>
+   * Default:
+   *
+   * <pre>
+   * null
+   * </pre>
+   *
+   * </li>
+   * </ul>
+   * @return Selenium Session Capabilities
+   */
+  public static String getSeleniumSessionCapabilitiesFile() { return asString(SYSTEM_PROPERTY_NAME_SELENIUM_SESSION_CAPABILITIES); }
 
   /**
    * HTTP password to use in HTTP basic auth.
