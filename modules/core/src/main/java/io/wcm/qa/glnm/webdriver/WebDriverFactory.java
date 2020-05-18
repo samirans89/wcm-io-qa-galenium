@@ -19,18 +19,19 @@
  */
 package io.wcm.qa.glnm.webdriver;
 
-import static io.wcm.qa.glnm.configuration.GaleniumConfiguration.getGridHost;
-import static io.wcm.qa.glnm.configuration.GaleniumConfiguration.getGridPort;
-import static io.wcm.qa.glnm.configuration.GaleniumConfiguration.isHeadless;
+import static io.wcm.qa.glnm.configuration.GaleniumConfiguration.*;
 import static java.text.MessageFormat.format;
+
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -39,6 +40,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.testng.SkipException;
@@ -48,6 +50,7 @@ import io.wcm.qa.glnm.configuration.GaleniumConfiguration;
 import io.wcm.qa.glnm.device.TestDevice;
 import io.wcm.qa.glnm.selenium.RunMode;
 import io.wcm.qa.glnm.util.GaleniumContext;
+
 
 /**
  * Static factory methods for use by {@link WebDriverManager}.
@@ -59,6 +62,7 @@ final class WebDriverFactory {
   }
 
   private static OptionsProvider getDesiredCapabilitiesProvider(TestDevice device) {
+
     switch (device.getBrowserType()) {
       case CHROME:
         OptionsProvider chromeOptionProvider;
@@ -89,6 +93,14 @@ final class WebDriverFactory {
         return new FirefoxOptionsProvider();
       case IE:
         return new InternetExplorerOptionsProvider();
+      case REMOTE_CHROME:
+      case REMOTE_FIREFOX:
+      case REMOTE_EDGE:
+      case REMOTE_SAFARI:
+      case REMOTE_OPERA:
+        return new RemoteOptionsProvider(getRemoteCapabiltiesFolderPath() + "/" + getSeleniumSessionCapabilitiesFile(), device.getBrowserType().toString());
+      case REMOTE_IE:
+        return new RemoteIEOptionsProvider(getRemoteCapabiltiesFolderPath() + "/" + getSeleniumSessionCapabilitiesFile(), device.getBrowserType().toString());
       default:
         break;
     }
@@ -146,6 +158,8 @@ final class WebDriverFactory {
   private static WebDriver getRemoteDriver(OptionsProvider capabilitiesProvider) {
     String gridHost = getGridHost();
     int gridPort = getGridPort();
+    String gridUser = getGridUser();
+    String gridAccessKey = getGridAccessKey();
     getLogger().info("Connecting to grid at " + gridHost + ":" + gridPort + "...");
     try {
       String protocol = "http";
@@ -153,7 +167,15 @@ final class WebDriverFactory {
         gridHost = StringUtils.removeStart(gridHost, "https://");
         protocol = "https";
       }
-      return new RemoteWebDriver(new URL(protocol, gridHost, gridPort, "/wd/hub"), capabilitiesProvider.getOptions());
+      String hubURL;
+
+      if(gridUser != null && !gridUser.isEmpty()) {
+         hubURL = protocol +"://" + gridUser + ":" + gridAccessKey + "@" + gridHost + ":" + gridPort + "/wd/hub";
+      } else {
+        hubURL = protocol +"://" + gridHost + ":" + gridPort + "/wd/hub";
+      }
+
+      return new RemoteWebDriver(new URL(hubURL), capabilitiesProvider.getOptions());
     }
     catch (MalformedURLException ex) {
       throw new RuntimeException(
